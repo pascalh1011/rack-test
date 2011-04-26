@@ -100,7 +100,8 @@ module Rack
               end.join
             end
           else
-            build_primitive_part(name, value)
+            primitive_part = build_primitive_part(name, value)
+            Rack::Test.encoding_aware_strings? ? primitive_part.force_encoding('BINARY') : primitive_part
           end
 
         }.join + "--#{MULTIPART_BOUNDARY}--\r\n"

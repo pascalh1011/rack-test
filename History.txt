@@ -2,9 +2,30 @@
 
 * Bug fixes
 
+  * Call #finish on MockResponses if it's available (Aaron Patterson)
+
+== 0.5.7 / 2011-01-01
+
+* Bug fixes
+
+  * If no URI is present, include all cookies (Pratik Naik)
+
+== 0.5.6 / 2010-09-25
+
+* Bug fixes
+
+  * Use parse_nested_query for parsing URI like Rack does (Eugene Bolshakov)
+  * Don't depend on ActiveSupport extension to String (Bryan Helmkamp)
+  * Do not overwrite HTTP_HOST if it is set (Krekoten' Marjan)
+
+== 0.5.5 / 2010-09-22
+
+* Bug fixes
+
+  * Fix encoding of file uploads on Ruby 1.9 (Alan Kennedy)
   * Set env["HTTP_HOST"] when making requests (Istvan Hoka)
 
-== 0.5.4 / 2009-05-26
+== 0.5.4 / 2010-05-26
 
 * Bug fixes
 

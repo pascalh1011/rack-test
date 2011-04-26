@@ -1,12 +1,16 @@
 require "rubygems"
-require "spec"
+require "bundler/setup"
 
-gem "rack", "~> 1.0.0"
+require "rack"
+require "rspec"
+
+Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each {|f| require f}
 
 require "rack/test"
 require File.dirname(__FILE__) + "/fixtures/fake_app"
 
-Spec::Runner.configure do |config|
+Rspec.configure do |config|
+  config.mock_with :rspec
   config.include Rack::Test::Methods
 
   def app
@@ -18,7 +22,7 @@ Spec::Runner.configure do |config|
 
 end
 
-describe "any #verb methods", :shared => true do
+shared_examples_for "any #verb methods" do
   it "requests the URL using VERB" do
     send(verb, "/")
 

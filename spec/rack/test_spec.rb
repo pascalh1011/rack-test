@@ -29,6 +29,11 @@ describe Rack::Test::Session do
       last_request.env["X-Foo"].should == "bar"
     end
 
+    it "allows HTTP_HOST to be set" do
+      request "/", "HTTP_HOST" => "www.example.ua"
+      last_request.env['HTTP_HOST'].should == "www.example.ua"
+    end
+
     it "defaults to GET" do
       request "/"
       last_request.env["REQUEST_METHOD"].should == "GET"
@@ -91,6 +96,11 @@ describe Rack::Test::Session do
       last_request.GET.should == { "baz" => "2", "foo" => { "bar" => "1" }}
     end
 
+    it "parses query strings with repeated variable names correctly" do
+      request "/foo?bar=2&bar=3"
+      last_request.GET.should == { "bar" => "3" }
+    end
+
     it "accepts raw input in params for GET requests" do
       request "/foo?baz=2", :params => "foo[bar]=1"
       last_request.GET.should == { "baz" => "2", "foo" => { "bar" => "1" }}
@@ -146,12 +156,12 @@ describe Rack::Test::Session do
     end
 
     context "when input is given" do
-      it "should send the input" do
+      it "sends the input" do
         request "/", :method => "POST", :input => "foo"
         last_request.env["rack.input"].read.should == "foo"
       end
 
-      it "should not send a multipart request" do
+      it "does not send a multipart request" do
         request "/", :method => "POST", :input => "foo"
         last_request.env["CONTENT_TYPE"].should_not == "application/x-www-form-urlencoded"
       end

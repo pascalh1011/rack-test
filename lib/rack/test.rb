@@ -9,7 +9,7 @@ require "rack/test/uploaded_file"
 
 module Rack
   module Test
-    VERSION = "0.5.4"
+    VERSION = "0.5.7"
 
     DEFAULT_HOST = "example.org"
     MULTIPART_BOUNDARY = "----------XnJLe9ZIbbGUYtzPQJ16u1"
@@ -161,7 +161,7 @@ module Rack
         uri.path = "/#{uri.path}" unless uri.path[0] == ?/
         uri.host ||= @default_host
 
-        env["HTTP_HOST"] = [uri.host, uri.port].compact.join(":")
+        env["HTTP_HOST"] ||= [uri.host, uri.port].compact.join(":")
 
         env = default_env.merge(env)
 
@@ -175,7 +175,7 @@ module Rack
         if env["REQUEST_METHOD"] == "GET"
           params = env[:params] || {}
           params = parse_nested_query(params) if params.is_a?(String)
-          params.update(parse_query(uri.query))
+          params.update(parse_nested_query(uri.query))
           uri.query = build_nested_query(params)
         elsif !env.has_key?(:input)
           env["CONTENT_TYPE"] ||= "application/x-www-form-urlencoded"
@@ -273,6 +273,10 @@ module Rack
         end
       end
 
+    end
+
+    def self.encoding_aware_strings?
+      defined?(Encoding) && "".respond_to?(:encode)
     end
 
   end

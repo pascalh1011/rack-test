@@ -1,11 +1,6 @@
 require "spec_helper"
 
 describe Rack::Test::Session do
-  def have_body(string)
-    simple_matcher "have body #{string.inspect}" do |response|
-      response.body.should == string
-    end
-  end
 
   context "cookies" do
     it "keeps a cookie jar" do
@@ -118,6 +113,7 @@ describe Rack::Test::Session do
 
       get "https://example.com/cookies/show"
       last_request.cookies.should == { "secure-cookie" => "set" }
+      rack_mock_session.cookie_jar['secure-cookie'].should == 'set'
     end
 
     it "keeps separate cookie jars for different domains" do
